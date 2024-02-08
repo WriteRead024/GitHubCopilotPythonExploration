@@ -12,9 +12,6 @@ window = tk.Tk()
 # Set the window title
 window.title("Number Display")
 
-# Set the window size
-window.geometry("400x200")
-
 # Get the screen width and height
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
