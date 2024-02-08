@@ -27,13 +27,13 @@ window.geometry(f"400x200+{x}+{y}")
 label = tk.Label(window, text="1, 2, 3, 4, 5")
 
 # Center the label in the window
-label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+label.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
 
 # Create a button to close the window
 button = tk.Button(window, text="Close", command=window.destroy)
 
 # Place the button below the label
-button.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
+button.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
 
 # Function to close the window when Escape key is pressed
 def close_window(event):
