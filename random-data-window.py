@@ -17,7 +17,7 @@ def generate_new_numbers():
 window = tk.Tk()
 
 # Set the window title
-window.title("Number Display")
+window.title("Random Numbers Window")
 
 # Get the screen width and height
 screen_width = window.winfo_screenwidth()
