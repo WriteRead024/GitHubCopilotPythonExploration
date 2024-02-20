@@ -31,11 +31,11 @@ screen_height = window.winfo_screenheight()
 
 # Calculate the x and y coordinates for the window to be centered
 x = int((screen_width / 2) - (600 / 2))
-y = int((screen_height / 2) - (375 / 2))
+y = int((screen_height / 2) - (330 / 2))
 
 # Set intial the window position and minimum size
-window.geometry(f"600x375+{x}+{y}")
-window.minsize(500, 375)
+window.geometry(f"600x330+{x}+{y}")
+window.minsize(500, 330)
 
 # Create labels to display the numbers
 label_random_numbers = tk.Label(window, text="Random Numbers: (uninitialized value)", font=("Arial", 12))
@@ -66,7 +66,7 @@ button_generate.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
 button_close = tk.Button(window, text="Close", command=window.destroy)
 
 # Place the button below the generate button
-button_close.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
+button_close.place(relx=0.5, rely=0.85, anchor=tk.CENTER)
 
 # Function to close the window when Escape key is pressed
 def close_window(event):
