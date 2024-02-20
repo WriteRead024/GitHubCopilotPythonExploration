@@ -9,6 +9,8 @@ from scipy.stats import chisquare
 import importlib
 grtd = importlib.import_module("generate-random-test-data")
 
+console_logging = False
+
 def evaluate_randomness(return_data=False):
 
     # Generate some random numbers
@@ -16,7 +18,8 @@ def evaluate_randomness(return_data=False):
     random_number_list = grtd.generate_random_number_list(random_number)
 
     # Display the random numbers
-    print(f"Random Numbers: {random_number_list}")
+    if console_logging:
+        print(f"Random Numbers: {random_number_list}")
 
     # Count the frequency of each number
     counter = Counter(random_number_list)
@@ -31,14 +34,16 @@ def evaluate_randomness(return_data=False):
     chi_square_stat, p_value = chisquare(observed_frequencies, f_exp=expected_frequencies)
 
     # Display the results of the Chi-Square Test
-    print(f"Chi-Square Statistic: {chi_square_stat}")
-    print(f"P-Value: {p_value}")
+    if console_logging: 
+        print(f"Chi-Square Statistic: {chi_square_stat}")
+        print(f"P-Value: {p_value}")
 
     # If the p-value is less than 0.05, we reject the null hypothesis that the sequence is random
-    if p_value < 0.05:
-        print(f"P-Value is less than 0.05, so the sequence is not random.")        
-    else:
-        print(f"P-Value is greater than 0.05, so the sequence is random.")
+    if console_logging:
+        if p_value < 0.05:
+            print(f"P-Value is less than 0.05, so the sequence is not random.")        
+        else:
+            print(f"P-Value is greater than 0.05, so the sequence is random.")
 
     if return_data:
         return random_number_list, observed_frequencies, expected_frequencies, chi_square_stat, p_value
