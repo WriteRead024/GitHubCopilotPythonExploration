@@ -31,10 +31,11 @@ screen_height = window.winfo_screenheight()
 
 # Calculate the x and y coordinates for the window to be centered
 x = int((screen_width / 2) - (600 / 2))
-y = int((screen_height / 2) - (400 / 2))
+y = int((screen_height / 2) - (375 / 2))
 
-# Set the window position
-window.geometry(f"600x400+{x}+{y}")
+# Set intial the window position and minimum size
+window.geometry(f"600x375+{x}+{y}")
+window.minsize(500, 375)
 
 # Create labels to display the numbers
 label_random_numbers = tk.Label(window, text="Random Numbers: (uninitialized value)", font=("Arial", 12))
@@ -48,24 +49,24 @@ label_p_value = tk.Label(window, text="P-Value: (uninitialized value)", font=("A
 evaluate_new_numbers()
 
 # Center the labels in the window
-label_random_numbers.place(relx=0.5, rely=0.25, anchor=tk.CENTER)
-label_random_numbers_length.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
-label_observed_frequencies.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
+label_random_numbers.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
+label_random_numbers_length.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
+label_observed_frequencies.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 label_expected_frequencies.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
-label_chi_square_stat.place(relx=0.5, rely=0.45, anchor=tk.CENTER)
-label_p_value.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+label_chi_square_stat.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+label_p_value.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
 
 # Create a button to generate new numbers
 button_generate = tk.Button(window, text="Evaluate New Number List", command=evaluate_new_numbers)
 
 # Place the button below the labels
-button_generate.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
+button_generate.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
 
 # Create a button to close the window
 button_close = tk.Button(window, text="Close", command=window.destroy)
 
 # Place the button below the generate button
-button_close.place(relx=0.5, rely=0.75, anchor=tk.CENTER)
+button_close.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
 
 # Function to close the window when Escape key is pressed
 def close_window(event):
