@@ -38,3 +38,6 @@ for k in gk:
     else:
         print(k + " length: " + str(len(gki)))
     print()
+
+print("It was interesting to note that the imported modules")
+print("were imported into the globals() list.")
