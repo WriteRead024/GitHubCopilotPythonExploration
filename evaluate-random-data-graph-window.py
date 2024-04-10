@@ -1,13 +1,21 @@
 # 'evaluate-random-data-graph-window.py' adapted 4/10/2024 from
 # 'evaluate-random-data-window.py' started 2/8/2024
+#
 # Rich W.
 # using
 # GitHub Copilot
-
+# and tutorial from
+# https://pythonprogramming.net/how-to-embed-matplotlib-graph-tkinter-gui/
+#
 
 import tkinter as tk
 import importlib
 erd = importlib.import_module("evaluate-random-data")
+TkaggGraph = importlib.import_module("tkagg-graph").TkaggGraph
+
+
+ARIAL_FONT = ("Arial", 12)
+
 
 def evaluate_new_numbers():
     random_number_list, observed_frequencies, expected_frequencies, chi_square_stat, p_value = erd.evaluate_randomness(return_data=True)
@@ -30,44 +38,72 @@ window.title("Random Number Graph Display")
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 
+# initial window geometry dimensions
+window_x = 1200
+window_y = 530
+
 # Calculate the x and y coordinates for the window to be centered
-x = int((screen_width / 2) - (600 / 2))
-y = int((screen_height / 2) - (330 / 2))
+x = int((screen_width / 2) - (window_x / 2))
+y = int((screen_height / 2) - (window_y / 2))
 
 # Set intial the window position and minimum size
-window.geometry(f"600x330+{x}+{y}")
+# not sure yet how to center on a single screen instead of the whole desktop
+window.geometry(f"{window_x}x{window_y}+{x}+{y}")
 window.minsize(500, 330)
 
+# Special font for the window's children
+window.child_font = ARIAL_FONT
+
+# Create a frame for the controls
+controls_frame = tk.Frame(window)
+controls_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
 # Create labels to display the numbers
-label_random_numbers = tk.Label(window, text="Random Numbers: (uninitialized value)", font=("Arial", 12))
-label_random_numbers_length = tk.Label(window, text="Random Numbers Length: (uninitialized value)", font=("Arial", 12))
-label_observed_frequencies = tk.Label(window, text="Observed Frequencies: (uninitialized value)", font=("Arial", 12))
-label_expected_frequencies = tk.Label(window, text="Expected Frequencies: (uninitialized value)", font=("Arial", 12))
-label_chi_square_stat = tk.Label(window, text="Chi-Square Statistic: (uninitialized value)", font=("Arial", 12))
-label_p_value = tk.Label(window, text="P-Value: (uninitialized value)", font=("Arial", 12))
+label_random_numbers = tk.Label(controls_frame, text="Random Numbers: (uninitialized value)", font=ARIAL_FONT)
+label_random_numbers_length = tk.Label(controls_frame, text="Random Numbers Length: (uninitialized value)", font=ARIAL_FONT)
+label_observed_frequencies = tk.Label(controls_frame, text="Observed Frequencies: (uninitialized value)", font=ARIAL_FONT)
+label_expected_frequencies = tk.Label(controls_frame, text="Expected Frequencies: (uninitialized value)", font=ARIAL_FONT)
+label_chi_square_stat = tk.Label(controls_frame, text="Chi-Square Statistic: (uninitialized value)", font=ARIAL_FONT)
+label_p_value = tk.Label(controls_frame, text="P-Value: (uninitialized value)", font=ARIAL_FONT)
+
+# Center the labels in the controls frame
+label_random_numbers.pack(anchor=tk.W, padx=10, pady=(50, 5))
+label_random_numbers_length.pack(anchor=tk.W, padx=10, pady=5)
+label_observed_frequencies.pack(anchor=tk.W, padx=10, pady=5)
+label_expected_frequencies.pack(anchor=tk.W, padx=10, pady=5)
+label_chi_square_stat.pack(anchor=tk.W, padx=10, pady=5)
+label_p_value.pack(anchor=tk.W, padx=10, pady=5)
+
+# Create a button to generate new numbers
+button_generate = tk.Button(controls_frame, text="Evaluate New Number List", command=evaluate_new_numbers)
+
+# Place the button below the labels
+button_generate.pack(pady=10)
+
+# Create a button to close the window
+button_close = tk.Button(controls_frame, text="Close", command=window.destroy)
+
+# Place the button below the generate button
+button_close.pack(pady=10)
+
+# Create a frame for the graph
+graph_frame = tk.Frame(window)
+graph_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+# Create an instance of TkaggGraph in the frame
+graph = TkaggGraph(graph_frame, window)
+
+# Pack the graph to the right side of the frame
+graph.pack(fill=tk.BOTH, expand=True)
+
+# Set the width of the graph frame to occupy only the right half of the window
+graph_frame.config(width=window_x // 2)
+
+
 
 # Set the initial text of the labels to generated random numbers
 evaluate_new_numbers()
 
-# Center the labels in the window
-label_random_numbers.place(relx=0.01, rely=0.1, anchor=tk.W)
-label_random_numbers_length.place(relx=0.01, rely=0.2, anchor=tk.W)
-label_observed_frequencies.place(relx=0.01, rely=0.3, anchor=tk.W)
-label_expected_frequencies.place(relx=0.01, rely=0.4, anchor=tk.W)
-label_chi_square_stat.place(relx=0.01, rely=0.5, anchor=tk.W)
-label_p_value.place(relx=0.01, rely=0.6, anchor=tk.W)
-
-# Create a button to generate new numbers
-button_generate = tk.Button(window, text="Evaluate New Number List", command=evaluate_new_numbers)
-
-# Place the button below the labels
-button_generate.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
-
-# Create a button to close the window
-button_close = tk.Button(window, text="Close", command=window.destroy)
-
-# Place the button below the generate button
-button_close.place(relx=0.5, rely=0.85, anchor=tk.CENTER)
 
 # Function to close the window when Escape key is pressed
 def close_window(event):
