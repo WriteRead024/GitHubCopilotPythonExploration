@@ -51,4 +51,5 @@ def evaluate_randomness(return_data=False):
         return p_value >= 0.05
     
 if __name__ == '__main__':
+    console_logging = True
     evaluate_randomness()
