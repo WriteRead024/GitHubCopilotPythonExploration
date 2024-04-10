@@ -1,4 +1,5 @@
-# started 2/8/2024
+# 'evaluate-random-data-graph-window.py' adapted 4/10/2024 from
+# 'evaluate-random-data-window.py' started 2/8/2024
 # Rich W.
 # using
 # GitHub Copilot
@@ -23,7 +24,7 @@ def evaluate_new_numbers():
 window = tk.Tk()
 
 # Set the window title
-window.title("Random Number Display")
+window.title("Random Number Graph Display")
 
 # Get the screen width and height
 screen_width = window.winfo_screenwidth()
@@ -49,12 +50,12 @@ label_p_value = tk.Label(window, text="P-Value: (uninitialized value)", font=("A
 evaluate_new_numbers()
 
 # Center the labels in the window
-label_random_numbers.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
-label_random_numbers_length.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
-label_observed_frequencies.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
-label_expected_frequencies.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
-label_chi_square_stat.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-label_p_value.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
+label_random_numbers.place(relx=0.01, rely=0.1, anchor=tk.W)
+label_random_numbers_length.place(relx=0.01, rely=0.2, anchor=tk.W)
+label_observed_frequencies.place(relx=0.01, rely=0.3, anchor=tk.W)
+label_expected_frequencies.place(relx=0.01, rely=0.4, anchor=tk.W)
+label_chi_square_stat.place(relx=0.01, rely=0.5, anchor=tk.W)
+label_p_value.place(relx=0.01, rely=0.6, anchor=tk.W)
 
 # Create a button to generate new numbers
 button_generate = tk.Button(window, text="Evaluate New Number List", command=evaluate_new_numbers)
