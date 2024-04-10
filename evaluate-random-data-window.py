@@ -31,12 +31,17 @@ window.title("Random Number Display")
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 
+# initial window geometry dimensions
+window_x = 600
+window_y = 330
+
 # Calculate the x and y coordinates for the window to be centered
-x = int((screen_width / 2) - (600 / 2))
-y = int((screen_height / 2) - (330 / 2))
+x = int((screen_width / 2) - (window_x / 2))
+y = int((screen_height / 2) - (window_y / 2))
 
 # Set intial the window position and minimum size
-window.geometry(f"600x330+{x}+{y}")
+# not sure yet how to center on a single screen instead of the whole desktop
+window.geometry(f"{window_x}x{window_y}+{x}+{y}")
 window.minsize(500, 330)
 
 # Create labels to display the numbers
