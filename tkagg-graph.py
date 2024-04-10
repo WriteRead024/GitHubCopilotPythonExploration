@@ -27,19 +27,20 @@ class TkaggGraph(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Graph Page", font=controller.child_font)
-        label.pack(padx=2,pady=2)
+        self.graph_header_label = tk.Label(self, text="Graph Page", font=controller.child_font)
+        self.graph_header_label.pack(padx=2,pady=2)
 
         # instantiate and expose the figure and subplot as class instance attributes
         self.fig = Figure(figsize=(5, 5), dpi=100)
-        self.a_sp = self.fig.add_subplot(111)
+        # 111 indicates the grid position of the subplot
+        self.subplot = self.fig.add_subplot(111)
         
         # plot some default data
-        self.a_sp.plot([1, 2, 3, 4, 5], [4, 4, 4, 4, 3])
+        self.subplot.plot([1, 2, 3, 4, 5], [4, 4, 4, 4, 3])
 
         # instantiate and show the canvas
-        canvas = FigureCanvasTkAgg(self.fig, self)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        self.canvas = FigureCanvasTkAgg(self.fig, self)
+        self.canvas.get_tk_widget().pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        self.canvas.draw()
 
         
