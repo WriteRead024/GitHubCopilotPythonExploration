@@ -10,6 +10,8 @@
 
 import tkinter as tk
 import importlib
+import sys
+sys.path.append('..')
 erd = importlib.import_module("evaluate-random-data")
 MultiYAxisTkaggGraph = importlib.import_module("multi-y-axis-tkagg-graph").MultiYAxisTkaggGraph
 GraphDataObj = importlib.import_module("multi-y-axis-tkagg-graph").GraphDataObj
