@@ -8,6 +8,8 @@ import tkinter as tk
 import importlib
 erd = importlib.import_module("evaluate-random-data")
 
+ARIAL_FONT = ("Arial", 12)
+
 def evaluate_new_numbers():
     random_number_list, observed_frequencies, expected_frequencies, chi_square_stat, p_value = erd.evaluate_randomness(return_data=True)
     
@@ -38,12 +40,12 @@ window.geometry(f"600x330+{x}+{y}")
 window.minsize(500, 330)
 
 # Create labels to display the numbers
-label_random_numbers = tk.Label(window, text="Random Numbers: (uninitialized value)", font=("Arial", 12))
-label_random_numbers_length = tk.Label(window, text="Random Numbers Length: (uninitialized value)", font=("Arial", 12))
-label_observed_frequencies = tk.Label(window, text="Observed Frequencies: (uninitialized value)", font=("Arial", 12))
-label_expected_frequencies = tk.Label(window, text="Expected Frequencies: (uninitialized value)", font=("Arial", 12))
-label_chi_square_stat = tk.Label(window, text="Chi-Square Statistic: (uninitialized value)", font=("Arial", 12))
-label_p_value = tk.Label(window, text="P-Value: (uninitialized value)", font=("Arial", 12))
+label_random_numbers = tk.Label(window, text="Random Numbers: (uninitialized value)", font=ARIAL_FONT)
+label_random_numbers_length = tk.Label(window, text="Random Numbers Length: (uninitialized value)", font=ARIAL_FONT)
+label_observed_frequencies = tk.Label(window, text="Observed Frequencies: (uninitialized value)", font=ARIAL_FONT)
+label_expected_frequencies = tk.Label(window, text="Expected Frequencies: (uninitialized value)", font=ARIAL_FONT)
+label_chi_square_stat = tk.Label(window, text="Chi-Square Statistic: (uninitialized value)", font=ARIAL_FONT)
+label_p_value = tk.Label(window, text="P-Value: (uninitialized value)", font=ARIAL_FONT)
 
 # Set the initial text of the labels to generated random numbers
 evaluate_new_numbers()
