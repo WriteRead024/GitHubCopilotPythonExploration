@@ -62,7 +62,11 @@ class MultiYAxisTkaggGraph(tk.Frame):
         p1 = axis_1.plot(x_axis_values, arg_graph_data_obj.number_counts, "C0", label="Number Counts")
         p2 = axis_twin_1.plot(x_axis_values, arg_graph_data_obj.chi_square_values, "C1", label="Chi-Square Values")
         p3 = axis_twin_2.plot(x_axis_values, arg_graph_data_obj.p_values, "C2", label="p Values")
-        self.fig.axes[0].set_xlim(1, arg_graph_data_obj.number_of_results)
+        if arg_graph_data_obj.number_of_results != 1:
+            self.fig.axes[0].set_xlim(1, arg_graph_data_obj.number_of_results)
+        else:
+            # this avoids a console warning
+            self.fig.axes[0].set_xlim(1, 10)
 
         # set the colors for the axes and labels
         axis_1.yaxis.label.set_color(p1[0].get_color())
