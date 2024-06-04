@@ -12,6 +12,7 @@ os.environ["XDG_SESSION_TYPE"] = "xcb"
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QApplication,
+    QHeaderView,
     QMainWindow,
     QTableWidget,
     QTableWidgetItem,
@@ -32,24 +33,22 @@ class MainWindow(QMainWindow):
         self.clipboard_data = []
         self.last_clipboard_text = None
 
-        self.table = QTableWidget(0, 1)
-        self.table.setHorizontalHeaderLabels(['Clipboard Text'])
-        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table = QTableWidget(0, 3)
+        self.table.setHorizontalHeaderLabels(['Clipboard Text', 'Copy', 'Remove'])
+        header = self.table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.Fixed)
+        header.setSectionResizeMode(2, QHeaderView.Fixed)
+        self.table.setColumnWidth(1, 100)
+        self.table.setColumnWidth(2, 100)
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.copy_button = QPushButton("Copy to Clipboard")
-        self.remove_button = QPushButton("Remove from List")
 
         layout = QVBoxLayout()
         layout.addWidget(self.table)
-        layout.addWidget(self.copy_button)
-        layout.addWidget(self.remove_button)
 
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
-
-        self.copy_button.clicked.connect(self.copy_to_clipboard)
-        self.remove_button.clicked.connect(self.remove_from_list)
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.check_clipboard)
@@ -61,22 +60,29 @@ class MainWindow(QMainWindow):
             self.last_clipboard_text = text
             self.clipboard_data.append(text)
             self.table.insertRow(0)
+
             item = QTableWidgetItem(text)
-            # Make the grid row item not editable
-            item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+            item.setFlags(item.flags() & ~Qt.ItemIsEditable)  # Make the item not editable
             self.table.setItem(0, 0, item)
 
-    def copy_to_clipboard(self):
-        row = self.table.currentRow()
-        if row != -1:
-            self.last_clipboard_text = self.clipboard_data[row]
-            self.clipboard.setText(self.last_clipboard_text)
+            copy_button = QPushButton("Copy")
+            copy_button.clicked.connect(lambda: self.copy_to_clipboard(text))
+            self.table.setCellWidget(0, 1, copy_button)
 
-    def remove_from_list(self):
-        row = self.table.currentRow()
-        if row != -1:
-            self.table.removeRow(row)
-            del self.clipboard_data[row]
+            remove_button = QPushButton("Remove")
+            remove_button.clicked.connect(lambda: self.remove_from_list(text))
+            self.table.setCellWidget(0, 2, remove_button)
+
+    def copy_to_clipboard(self, text):
+        self.last_clipboard_text = text
+        self.clipboard.setText(text)
+
+    def remove_from_list(self, text):
+        self.clipboard_data.remove(text)
+        for i in range(self.table.rowCount()):
+            if self.table.item(i, 0).text() == text:
+                self.table.removeRow(i)
+                break
 
 
 app = QApplication(sys.argv)
