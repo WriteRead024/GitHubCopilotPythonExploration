@@ -3,8 +3,14 @@
 # with
 # GitHub Copilot
 
+
 import sys
+import os
+# silences a console warning
+os.environ["XDG_SESSION_TYPE"] = "xcb"
+
 from PyQt5.QtWidgets import (
+    QAbstractItemView,
     QApplication,
     QMainWindow,
     QTableWidget,
@@ -13,8 +19,9 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QWidget,
 )
-from PyQt5.Qt import QTimer, QClipboard
+from PyQt5.Qt import QTimer
 from PyQt5.QtCore import Qt
+
 
 
 class MainWindow(QMainWindow):
@@ -26,6 +33,9 @@ class MainWindow(QMainWindow):
         self.last_clipboard_text = None
 
         self.table = QTableWidget(0, 1)
+        self.table.setHorizontalHeaderLabels(['Clipboard Text'])
+        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.copy_button = QPushButton("Copy to Clipboard")
         self.remove_button = QPushButton("Remove from List")
 
@@ -51,12 +61,16 @@ class MainWindow(QMainWindow):
             self.last_clipboard_text = text
             self.clipboard_data.append(text)
             self.table.insertRow(0)
-            self.table.setItem(0, 0, QTableWidgetItem(text))
+            item = QTableWidgetItem(text)
+            # Make the grid row item not editable
+            item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+            self.table.setItem(0, 0, item)
 
     def copy_to_clipboard(self):
         row = self.table.currentRow()
         if row != -1:
-            self.clipboard.setText(self.clipboard_data[row])
+            self.last_clipboard_text = self.clipboard_data[row]
+            self.clipboard.setText(self.last_clipboard_text)
 
     def remove_from_list(self):
         row = self.table.currentRow()
