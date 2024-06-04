@@ -54,6 +54,8 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.check_clipboard)
         self.timer.start(1000)  # Check every second
 
+        self.resize(425, 200)
+
     def check_clipboard(self):
         text = self.clipboard.text()
         if text and text != self.last_clipboard_text:
