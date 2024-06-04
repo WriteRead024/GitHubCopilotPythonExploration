@@ -1,13 +1,21 @@
-
 # started 6/4/2024
 # Rich W.
 # with
 # GitHub Copilot
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QPushButton, QWidget
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QTableWidget,
+    QTableWidgetItem,
+    QVBoxLayout,
+    QPushButton,
+    QWidget,
+)
 from PyQt5.Qt import QTimer, QClipboard
 from PyQt5.QtCore import Qt
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -18,8 +26,8 @@ class MainWindow(QMainWindow):
         self.last_clipboard_text = None
 
         self.table = QTableWidget(0, 1)
-        self.copy_button = QPushButton('Copy to Clipboard')
-        self.remove_button = QPushButton('Remove from List')
+        self.copy_button = QPushButton("Copy to Clipboard")
+        self.remove_button = QPushButton("Remove from List")
 
         layout = QVBoxLayout()
         layout.addWidget(self.table)
@@ -48,7 +56,6 @@ class MainWindow(QMainWindow):
     def copy_to_clipboard(self):
         row = self.table.currentRow()
         if row != -1:
-            
             self.clipboard.setText(self.clipboard_data[row])
 
     def remove_from_list(self):
@@ -56,6 +63,7 @@ class MainWindow(QMainWindow):
         if row != -1:
             self.table.removeRow(row)
             del self.clipboard_data[row]
+
 
 app = QApplication(sys.argv)
 window = MainWindow()
