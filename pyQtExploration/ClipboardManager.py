@@ -9,6 +9,7 @@ import sys
 import os
 # silences a console warning
 os.environ["XDG_SESSION_TYPE"] = "xcb"
+# os.environ["QT_QPA_PLATFORM"] = "wayland"
 
 from PyQt5.QtWidgets import (
     QAbstractItemView,
