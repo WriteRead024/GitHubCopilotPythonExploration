@@ -21,6 +21,8 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QPushButton,
     QWidget,
+    QMenuBar,
+    QAction,
 )
 from PyQt5.Qt import QTimer
 from PyQt5.QtCore import Qt
@@ -56,6 +58,8 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.check_clipboard)
         self.timer.start(1000)  # Check every second
 
+        self.init_menu_bar()
+
         self.resize(425, 200)
 
     def check_clipboard(self):
@@ -87,6 +91,27 @@ class MainWindow(QMainWindow):
             if self.table.item(i, 0).text() == text:
                 self.table.removeRow(i)
                 break
+
+    def init_menu_bar(self):
+        menu_bar = self.menuBar()
+
+        file_menu = menu_bar.addMenu('File')
+        save_action = QAction('Save', self)
+        load_action = QAction('Load', self)
+        file_menu.addAction(save_action)
+        file_menu.addAction(load_action)        
+
+        save_action.triggered.connect(self.save_clipboard_data)
+        load_action.triggered.connect(self.load_clipboard_data)
+
+    def save_clipboard_data(self):
+        # Placeholder for save functionality
+        pass
+
+    def load_clipboard_data(self):
+        # Placeholder for load functionality
+        pass
+
 
 
 app = QApplication(sys.argv)
