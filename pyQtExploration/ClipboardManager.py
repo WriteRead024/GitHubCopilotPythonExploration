@@ -128,8 +128,7 @@ class MainWindow(QMainWindow):
                     remove_button.clicked.connect(lambda: self.remove_from_list(text))
                     self.table.setCellWidget(0, 2, remove_button)
         except FileNotFoundError:
-            pass
-
+            print("ERROR: File not found.  The clipboard_data.json file was not found.")
 
 
 app = QApplication(sys.argv)
