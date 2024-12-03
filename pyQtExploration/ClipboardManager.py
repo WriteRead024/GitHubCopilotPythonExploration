@@ -7,6 +7,7 @@
 
 import sys
 import os
+import json
 # silences a console warning
 os.environ["XDG_SESSION_TYPE"] = "xcb"
 # os.environ["QT_QPA_PLATFORM"] = "wayland"
@@ -105,12 +106,29 @@ class MainWindow(QMainWindow):
         load_action.triggered.connect(self.load_clipboard_data)
 
     def save_clipboard_data(self):
-        # Placeholder for save functionality
-        pass
+        with open('clipboard_data.json', 'w') as file:
+            json.dump(self.clipboard_data, file)
 
     def load_clipboard_data(self):
-        # Placeholder for load functionality
-        pass
+        try:
+            with open('clipboard_data.json', 'r') as file:
+                self.clipboard_data = json.load(file)
+                self.table.setRowCount(0)
+                for text in self.clipboard_data:
+                    self.table.insertRow(0)
+                    item = QTableWidgetItem(text)
+                    item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                    self.table.setItem(0, 0, item)
+
+                    copy_button = QPushButton("Copy")
+                    copy_button.clicked.connect(lambda: self.copy_to_clipboard(text))
+                    self.table.setCellWidget(0, 1, copy_button)
+
+                    remove_button = QPushButton("Remove")
+                    remove_button.clicked.connect(lambda: self.remove_from_list(text))
+                    self.table.setCellWidget(0, 2, remove_button)
+        except FileNotFoundError:
+            pass
 
 
 
