@@ -8,6 +8,7 @@
 import sys
 import os
 import json
+import glob
 # silences a console warning
 os.environ["XDG_SESSION_TYPE"] = "xcb"
 # os.environ["QT_QPA_PLATFORM"] = "wayland"
@@ -106,29 +107,46 @@ class MainWindow(QMainWindow):
         load_action.triggered.connect(self.load_clipboard_data)
 
     def save_clipboard_data(self):
-        with open('clipboard_data.json', 'w') as file:
+        files = glob.glob('clipboard_data_*.json')
+        if files:
+            latest_file = max(files, key=os.path.getctime)
+            latest_index = int(latest_file.split('_')[-1].split('.')[0])
+            new_index = latest_index + 1
+        else:
+            new_index = 1
+        new_filename = f'clipboard_data_{new_index}.json'
+        with open(new_filename, 'w') as file:
             json.dump(self.clipboard_data, file)
 
     def load_clipboard_data(self):
         try:
-            with open('clipboard_data.json', 'r') as file:
-                self.clipboard_data = json.load(file)
-                self.table.setRowCount(0)
-                for text in self.clipboard_data:
-                    self.table.insertRow(0)
-                    item = QTableWidgetItem(text)
-                    item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                    self.table.setItem(0, 0, item)
+            files = glob.glob('clipboard_data_*.json')
+            if files:
+                latest_file = max(files, key=lambda f: int(f.split('_')[-1].split('.')[0]))
+                with open(latest_file, 'r') as file:
+                    self.clipboard_data = json.load(file)
+                    self.table.setRowCount(0)
+                    for text in self.clipboard_data:
+                        self.table.insertRow(0)
+                        item = QTableWidgetItem(text)
+                        item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                        self.table.setItem(0, 0, item)
 
-                    copy_button = QPushButton("Copy")
-                    copy_button.clicked.connect(lambda: self.copy_to_clipboard(text))
-                    self.table.setCellWidget(0, 1, copy_button)
+                        copy_button = QPushButton("Copy")
+                        copy_button.clicked.connect(lambda: self.copy_to_clipboard(text))
+                        self.table.setCellWidget(0, 1, copy_button)
 
-                    remove_button = QPushButton("Remove")
-                    remove_button.clicked.connect(lambda: self.remove_from_list(text))
-                    self.table.setCellWidget(0, 2, remove_button)
+                        remove_button = QPushButton("Remove")
+                        remove_button.clicked.connect(lambda: self.remove_from_list(text))
+                        self.table.setCellWidget(0, 2, remove_button)
+            else:
+                print("ERROR: No clipboard data files found.")
         except FileNotFoundError:
-            print("ERROR: File not found.  The clipboard_data.json file was not found.")
+            print("ERROR: Clipboard data file not found.")
+        except json.JSONDecodeError:
+            print("ERROR: Failed to decode JSON from clipboard data file.")
+        except Exception as e:
+            print(f"ERROR: load_clipboard_data failed with exception: {e}")
 
 
 app = QApplication(sys.argv)
