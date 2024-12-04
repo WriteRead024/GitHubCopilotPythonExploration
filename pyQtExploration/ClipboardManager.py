@@ -69,19 +69,21 @@ class MainWindow(QMainWindow):
         if text and text != self.last_clipboard_text:
             self.last_clipboard_text = text
             self.clipboard_data.append(text)
-            self.table.insertRow(0)
+            self.add_item_to_datagrid(text)
 
-            item = QTableWidgetItem(text)
-            item.setFlags(item.flags() & ~Qt.ItemIsEditable)  # Make the item not editable
-            self.table.setItem(0, 0, item)
+    def add_item_to_datagrid(self, text):
+        self.table.insertRow(0)
+        item = QTableWidgetItem(text)
+        item.setFlags(item.flags() & ~Qt.ItemIsEditable)  # Make the item not editable
+        self.table.setItem(0, 0, item)
 
-            copy_button = QPushButton("Copy")
-            copy_button.clicked.connect(lambda: self.copy_to_clipboard(text))
-            self.table.setCellWidget(0, 1, copy_button)
+        copy_button = QPushButton("Copy")
+        copy_button.clicked.connect(lambda: self.copy_to_clipboard(text))
+        self.table.setCellWidget(0, 1, copy_button)
 
-            remove_button = QPushButton("Remove")
-            remove_button.clicked.connect(lambda: self.remove_from_list(text))
-            self.table.setCellWidget(0, 2, remove_button)
+        remove_button = QPushButton("Remove")
+        remove_button.clicked.connect(lambda: self.remove_from_list(text))
+        self.table.setCellWidget(0, 2, remove_button)
 
     def copy_to_clipboard(self, text):
         self.last_clipboard_text = text
@@ -127,18 +129,7 @@ class MainWindow(QMainWindow):
                     self.clipboard_data = json.load(file)
                     self.table.setRowCount(0)
                     for text in self.clipboard_data:
-                        self.table.insertRow(0)
-                        item = QTableWidgetItem(text)
-                        item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                        self.table.setItem(0, 0, item)
-
-                        copy_button = QPushButton("Copy")
-                        copy_button.clicked.connect(lambda: self.copy_to_clipboard(text))
-                        self.table.setCellWidget(0, 1, copy_button)
-
-                        remove_button = QPushButton("Remove")
-                        remove_button.clicked.connect(lambda: self.remove_from_list(text))
-                        self.table.setCellWidget(0, 2, remove_button)
+                        self.add_item_to_datagrid(text)
             else:
                 print("ERROR: No clipboard data files found.")
         except FileNotFoundError:
