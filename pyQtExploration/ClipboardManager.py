@@ -31,6 +31,15 @@ from PyQt5.Qt import QTimer
 from PyQt5.QtCore import Qt
 
 
+silent_command_line = False
+if "--silent" in sys.argv: silent_command_line = True
+
+
+if not silent_command_line:
+    print("Starting Clipboard Manager...")
+    import time
+    print(time.strftime("%X %x %Z"))
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -132,13 +141,17 @@ class MainWindow(QMainWindow):
                     for text in self.clipboard_data:
                         self.add_item_to_datagrid(text)
             else:
-                print("ERROR: No clipboard data files found.")
+                if not silent_command_line:
+                    print("ERROR: No clipboard data files found.")
         except FileNotFoundError:
-            print("ERROR: Clipboard data file not found.")
+            if not silent_command_line:
+                print("ERROR: Clipboard data file not found.")
         except json.JSONDecodeError:
-            print("ERROR: Failed to decode JSON from clipboard data file.")
+            if not silent_command_line:
+                print("ERROR: Failed to decode JSON from clipboard data file.")
         except Exception as e:
-            print(f"ERROR: load_clipboard_data failed with exception: {e}")
+            if not silent_command_line:
+                print(f"ERROR: load_clipboard_data failed with exception: {e}")
 
 
 app = QApplication(sys.argv)
