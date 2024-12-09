@@ -33,6 +33,7 @@ from PyQt5.QtCore import Qt
 
 silent_command_line = False
 if "--silent" in sys.argv: silent_command_line = True
+elif "-s" in sys.argv: silent_command_line = True
 
 
 if not silent_command_line:
