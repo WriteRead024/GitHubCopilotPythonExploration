@@ -1,3 +1,8 @@
+#'bitmap-file-generator.py'
+# written 2/9/2025
+# GitHub Copilot
+# Rich W.
+
 import struct
 
 def generate_bitmap(n, filename):
