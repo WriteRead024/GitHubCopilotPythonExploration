@@ -54,6 +54,8 @@ class SearchLineEdit(QLineEdit):
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
             if self.search_function:
                 self.search_function()
+            elif not silent_command_line:
+                print("ERROR WARNING: No search function provided.")
         else:
             super(SearchLineEdit, self).keyPressEvent(event)
 
