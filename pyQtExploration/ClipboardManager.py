@@ -31,7 +31,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.Qt import QTimer
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QKeyEvent
+from PyQt5.QtGui import QKeyEvent, QPalette, QColor
 
 
 silent_command_line = False
@@ -84,18 +84,20 @@ class MainWindow(QMainWindow):
         self.clear_button = QPushButton("Clear")
         self.clear_button.clicked.connect(self.clear_search)
 
-        search_layout = QHBoxLayout()
-        search_layout.addWidget(self.search_input)
-        search_layout.addWidget(self.search_button)
-        search_layout.addWidget(self.clear_button)
+        self.search_layout = QHBoxLayout()
+        self.search_layout.addWidget(self.search_input)
+        self.search_layout.addWidget(self.search_button)
+        self.search_layout.addWidget(self.clear_button)
 
         layout = QVBoxLayout()
-        layout.addLayout(search_layout)
+        layout.addLayout(self.search_layout)
         layout.addWidget(self.table)
 
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
+
+        self.default_search_layout_color = self.palette().color(QPalette.Window)
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.check_clipboard)
@@ -189,11 +191,19 @@ class MainWindow(QMainWindow):
         for i in range(self.table.rowCount()):
             item_text = self.table.item(i, 0).text().lower()
             self.table.setRowHidden(i, search_text not in item_text)
+        self.update_search_layout_color(bool(search_text))
 
     def clear_search(self):
         self.search_input.clear()
         for i in range(self.table.rowCount()):
             self.table.setRowHidden(i, False)
+        self.update_search_layout_color(False)
+
+    def update_search_layout_color(self, is_filtered):
+        color = QColor(173, 216, 230) if is_filtered else self.default_search_layout_color
+        palette = self.search_input.palette()
+        palette.setColor(QPalette.Base, color)
+        self.search_input.setPalette(palette)
 
 
 app = QApplication(sys.argv)
