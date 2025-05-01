@@ -81,9 +81,13 @@ class MainWindow(QMainWindow):
         self.search_button = QPushButton("Search")
         self.search_button.clicked.connect(self.search_clipboard)
 
+        self.clear_button = QPushButton("Clear")
+        self.clear_button.clicked.connect(self.clear_search)
+
         search_layout = QHBoxLayout()
         search_layout.addWidget(self.search_input)
         search_layout.addWidget(self.search_button)
+        search_layout.addWidget(self.clear_button)
 
         layout = QVBoxLayout()
         layout.addLayout(search_layout)
@@ -185,6 +189,11 @@ class MainWindow(QMainWindow):
         for i in range(self.table.rowCount()):
             item_text = self.table.item(i, 0).text().lower()
             self.table.setRowHidden(i, search_text not in item_text)
+
+    def clear_search(self):
+        self.search_input.clear()
+        for i in range(self.table.rowCount()):
+            self.table.setRowHidden(i, False)
 
 
 app = QApplication(sys.argv)
