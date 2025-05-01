@@ -26,9 +26,12 @@ from PyQt5.QtWidgets import (
     QWidget,
     QMenuBar,
     QAction,
+    QLineEdit,
+    QHBoxLayout,
 )
 from PyQt5.Qt import QTimer
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QKeyEvent
 
 
 silent_command_line = False
@@ -40,6 +43,19 @@ if not silent_command_line:
     print("Starting Clipboard Manager...")
     import time
     print(time.strftime("%X %x %Z"))
+
+
+class SearchLineEdit(QLineEdit):
+    def __init__(self, parent=None, search_function=None):
+        super(SearchLineEdit, self).__init__(parent)
+        self.search_function = search_function
+
+    def keyPressEvent(self, event: QKeyEvent):
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            if self.search_function:
+                self.search_function()
+        else:
+            super(SearchLineEdit, self).keyPressEvent(event)
 
 
 class MainWindow(QMainWindow):
@@ -60,7 +76,17 @@ class MainWindow(QMainWindow):
         self.table.setColumnWidth(2, 100)
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
 
+        self.search_input = SearchLineEdit(search_function=self.search_clipboard)
+        self.search_input.setPlaceholderText("Search clipboard...")
+        self.search_button = QPushButton("Search")
+        self.search_button.clicked.connect(self.search_clipboard)
+
+        search_layout = QHBoxLayout()
+        search_layout.addWidget(self.search_input)
+        search_layout.addWidget(self.search_button)
+
         layout = QVBoxLayout()
+        layout.addLayout(search_layout)
         layout.addWidget(self.table)
 
         container = QWidget()
@@ -153,6 +179,12 @@ class MainWindow(QMainWindow):
         except Exception as e:
             if not silent_command_line:
                 print(f"ERROR: load_clipboard_data failed with exception: {e}")
+
+    def search_clipboard(self):
+        search_text = self.search_input.text().lower()
+        for i in range(self.table.rowCount()):
+            item_text = self.table.item(i, 0).text().lower()
+            self.table.setRowHidden(i, search_text not in item_text)
 
 
 app = QApplication(sys.argv)
