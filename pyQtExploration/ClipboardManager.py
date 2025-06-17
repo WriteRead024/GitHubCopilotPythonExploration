@@ -158,14 +158,16 @@ class MainWindow(QMainWindow):
         clear_history_action.triggered.connect(self.clear_clipboard_history)  # Connect action
 
     def clear_clipboard_history(self):
-        reply = QMessageBox.question(
-            self,
-            "Confirm Clear",
-            "Are you sure you want to clear the clipboard history?",
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.No
-        )
-        if reply == QMessageBox.Yes:
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("Confirm Clear")
+        msg_box.setText("Are you sure you want to clear the clipboard history?")
+        yes_button = QPushButton("Yes")
+        no_button = QPushButton("No")
+        msg_box.addButton(yes_button, QMessageBox.YesRole)
+        msg_box.addButton(no_button, QMessageBox.NoRole)
+        msg_box.setDefaultButton(no_button)
+        reply = msg_box.exec_()
+        if reply == 0:  # Yes button is the first added
             self.clipboard_data.clear()
             self.table.setRowCount(0)
             if not silent_command_line:
@@ -226,14 +228,16 @@ class MainWindow(QMainWindow):
         self.search_input.setPalette(palette)
 
     def closeEvent(self, event):
-        reply = QMessageBox.question(
-            self,
-            "Confirm Exit",
-            "Are you sure you want to exit?",
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.No
-        )
-        if reply == QMessageBox.Yes:
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("Confirm Exit")
+        msg_box.setText("Are you sure you want to exit?")
+        yes_button = QPushButton("Yes")
+        no_button = QPushButton("No")
+        msg_box.addButton(yes_button, QMessageBox.YesRole)
+        msg_box.addButton(no_button, QMessageBox.NoRole)
+        msg_box.setDefaultButton(no_button)
+        reply = msg_box.exec_()
+        if reply == 0:  # Yes button is the first added
             event.accept()
         else:
             event.ignore()
