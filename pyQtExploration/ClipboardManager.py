@@ -147,11 +147,20 @@ class MainWindow(QMainWindow):
         file_menu = menu_bar.addMenu('File')
         save_action = QAction('Save', self)
         load_action = QAction('Load', self)
+        clear_history_action = QAction('Clear Clipboard History', self)  # New action
         file_menu.addAction(save_action)
-        file_menu.addAction(load_action)        
+        file_menu.addAction(load_action)
+        file_menu.addAction(clear_history_action)  # Add to menu
 
         save_action.triggered.connect(self.save_clipboard_data)
         load_action.triggered.connect(self.load_clipboard_data)
+        clear_history_action.triggered.connect(self.clear_clipboard_history)  # Connect action
+
+    def clear_clipboard_history(self):
+        self.clipboard_data.clear()
+        self.table.setRowCount(0)
+        if not silent_command_line:
+            print("Clipboard history cleared.")
 
     def save_clipboard_data(self):
         files = glob.glob('clipboard_data_*.json')
