@@ -149,9 +149,9 @@ class MainWindow(QMainWindow):
         save_action = QAction('Save', self)
         load_action = QAction('Load', self)
         clear_history_action = QAction('Clear Clipboard History', self)  # New action
-        file_menu.addAction(save_action)
-        file_menu.addAction(load_action)
         file_menu.addAction(clear_history_action)  # Add to menu
+        file_menu.addAction(load_action)
+        file_menu.addAction(save_action)
 
         save_action.triggered.connect(self.save_clipboard_data)
         load_action.triggered.connect(self.load_clipboard_data)
