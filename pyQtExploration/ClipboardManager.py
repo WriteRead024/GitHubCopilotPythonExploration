@@ -19,6 +19,7 @@ from PyQt5.QtWidgets import (
     QApplication,
     QHeaderView,
     QMainWindow,
+    QMessageBox,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -157,10 +158,18 @@ class MainWindow(QMainWindow):
         clear_history_action.triggered.connect(self.clear_clipboard_history)  # Connect action
 
     def clear_clipboard_history(self):
-        self.clipboard_data.clear()
-        self.table.setRowCount(0)
-        if not silent_command_line:
-            print("Clipboard history cleared.")
+        reply = QMessageBox.question(
+            self,
+            "Confirm Clear",
+            "Are you sure you want to clear the clipboard history?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        if reply == QMessageBox.Yes:
+            self.clipboard_data.clear()
+            self.table.setRowCount(0)
+            if not silent_command_line:
+                print("Clipboard history cleared.")
 
     def save_clipboard_data(self):
         files = glob.glob('clipboard_data_*.json')
@@ -215,6 +224,19 @@ class MainWindow(QMainWindow):
         palette = self.search_input.palette()
         palette.setColor(QPalette.Base, color)
         self.search_input.setPalette(palette)
+
+    def closeEvent(self, event):
+        reply = QMessageBox.question(
+            self,
+            "Confirm Exit",
+            "Are you sure you want to exit?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
 
 app = QApplication(sys.argv)
