@@ -27,7 +27,6 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QPushButton,
     QWidget,
-    QMenuBar,
     QAction,
     QLineEdit,
     QHBoxLayout,
@@ -194,6 +193,7 @@ class MainWindow(QMainWindow):
             new_index = 1
         new_filename = f'clipboard_data_{new_index}.json'
         with open(new_filename, 'w') as file:
+            file.write("ClipboardManager clipboard data version 0.2\n")
             json.dump(self.clipboard_data, file)
 
     def load_clipboard_data(self):
@@ -202,30 +202,17 @@ class MainWindow(QMainWindow):
             if files:
                 latest_file = max(files, key=lambda f: int(f.split('_')[-1].split('.')[0]))
                 with open(latest_file, 'r') as file:
-                    self.clipboard_data = json.load(file)
-                    self.table.setRowCount(0)
-                    for text in self.clipboard_data:
-                        self.add_item_to_datagrid(text)
-            else:
-                if not silent_command_line:
-                    print("ERROR: No clipboard data files found.")
-        except FileNotFoundError:
-            if not silent_command_line:
-                print("ERROR: Clipboard data file not found.")
-        except json.JSONDecodeError:
-            if not silent_command_line:
-                print("ERROR: Failed to decode JSON from clipboard data file.")
-        except Exception as e:
-            if not silent_command_line:
-                print(f"ERROR: load_clipboard_data failed with exception: {e}")
-
-    def load_clipboard_data(self):
-        try:
-            files = glob.glob('clipboard_data_*.json')
-            if files:
-                latest_file = max(files, key=lambda f: int(f.split('_')[-1].split('.')[0]))
-                with open(latest_file, 'r') as file:
-                    self.clipboard_data = json.load(file)
+                    first_line = file.readline()
+                    if first_line.strip() == "ClipboardManager clipboard data version 0.2":
+                        # Version 0.2: expects list of (timestamp, text) tuples
+                        self.clipboard_data = json.load(file)
+                    else:
+                        # Version 0.1: expects list of strings, add current timestamp
+                        # CODE COMMENT: Version 0.1 compatibility - add current timestamp to each entry
+                        file.seek(0)  # rewind to start
+                        v0p1_data = json.load(file)
+                        now = time.strftime("%Y-%m-%d %H:%M:%S")
+                        self.clipboard_data = [(now, text) for text in v0p1_data]
                     self.table.setRowCount(0)
                     for timestamp, text in self.clipboard_data:
                         self.add_item_to_datagrid(timestamp, text)
