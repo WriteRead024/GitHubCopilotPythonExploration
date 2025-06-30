@@ -1,5 +1,6 @@
 # started 6/4/2024
 # file menu improvements 12/3/2024
+# timestamp column 6/30/2025
 # Rich W.
 # with
 # GitHub Copilot
@@ -10,6 +11,7 @@ import sys
 import os
 import json
 import glob
+import time
 # silences a console warning
 os.environ["XDG_SESSION_TYPE"] = "xcb"
 # os.environ["QT_QPA_PLATFORM"] = "wayland"
@@ -42,7 +44,6 @@ elif "-s" in sys.argv: silent_command_line = True
 
 if not silent_command_line:
     print("Starting Clipboard Manager...")
-    import time
     print(time.strftime("%X %x %Z"))
 
 
@@ -66,17 +67,18 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.clipboard = QApplication.clipboard()
-        self.clipboard_data = []
+        self.clipboard_data = []  # tuples formatted (timestamp, text)
         self.last_clipboard_text = None
 
-        self.table = QTableWidget(0, 3)
-        self.table.setHorizontalHeaderLabels(['Clipboard Text', 'Copy', 'Remove'])
+        self.table = QTableWidget(0, 4)  # setup datagrid columns
+        self.table.setHorizontalHeaderLabels(['Timestamp', 'Clipboard Text', 'Copy', 'Remove'])
         header = self.table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QHeaderView.Fixed)
-        header.setSectionResizeMode(2, QHeaderView.Fixed)
-        self.table.setColumnWidth(1, 100)
+        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)  # Timestamp
+        header.setSectionResizeMode(1, QHeaderView.Stretch)           # Clipboard Text
+        header.setSectionResizeMode(2, QHeaderView.Fixed)             # Copy
+        header.setSectionResizeMode(3, QHeaderView.Fixed)             # Remove
         self.table.setColumnWidth(2, 100)
+        self.table.setColumnWidth(3, 100)
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
 
         self.search_input = SearchLineEdit(search_function=self.search_clipboard)
@@ -114,31 +116,40 @@ class MainWindow(QMainWindow):
         text = self.clipboard.text()
         if text and text != self.last_clipboard_text:
             self.last_clipboard_text = text
-            self.clipboard_data.append(text)
-            self.add_item_to_datagrid(text)
+            timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            self.clipboard_data.append((timestamp, text))
+            self.add_item_to_datagrid(timestamp, text)
 
-    def add_item_to_datagrid(self, text):
+    def add_item_to_datagrid(self, timestamp, text):
         self.table.insertRow(0)
-        item = QTableWidgetItem(text)
-        item.setFlags(item.flags() & ~Qt.ItemIsEditable)  # Make the item not editable
-        self.table.setItem(0, 0, item)
+        timestamp_item = QTableWidgetItem(timestamp)
+        timestamp_item.setFlags(timestamp_item.flags() & ~Qt.ItemIsEditable)
+        self.table.setItem(0, 0, timestamp_item)
+
+        text_item = QTableWidgetItem(text)
+        text_item.setFlags(text_item.flags() & ~Qt.ItemIsEditable)
+        self.table.setItem(0, 1, text_item)
 
         copy_button = QPushButton("Copy")
         copy_button.clicked.connect(lambda: self.copy_to_clipboard(text))
-        self.table.setCellWidget(0, 1, copy_button)
+        self.table.setCellWidget(0, 2, copy_button)
 
         remove_button = QPushButton("Remove")
-        remove_button.clicked.connect(lambda: self.remove_from_list(text))
-        self.table.setCellWidget(0, 2, remove_button)
+        remove_button.clicked.connect(lambda: self.remove_from_list(timestamp, text))
+        self.table.setCellWidget(0, 3, remove_button)
 
     def copy_to_clipboard(self, text):
         self.last_clipboard_text = text
         self.clipboard.setText(text)
 
-    def remove_from_list(self, text):
-        self.clipboard_data.remove(text)
+    def remove_from_list(self, timestamp, text):
+        try:
+            self.clipboard_data.remove((timestamp, text))
+        except ValueError:
+            pass
         for i in range(self.table.rowCount()):
-            if self.table.item(i, 0).text() == text:
+            if (self.table.item(i, 0).text() == timestamp and
+                self.table.item(i, 1).text() == text):
                 self.table.removeRow(i)
                 break
 
@@ -208,10 +219,33 @@ class MainWindow(QMainWindow):
             if not silent_command_line:
                 print(f"ERROR: load_clipboard_data failed with exception: {e}")
 
+    def load_clipboard_data(self):
+        try:
+            files = glob.glob('clipboard_data_*.json')
+            if files:
+                latest_file = max(files, key=lambda f: int(f.split('_')[-1].split('.')[0]))
+                with open(latest_file, 'r') as file:
+                    self.clipboard_data = json.load(file)
+                    self.table.setRowCount(0)
+                    for timestamp, text in self.clipboard_data:
+                        self.add_item_to_datagrid(timestamp, text)
+            else:
+                if not silent_command_line:
+                    print("ERROR: No clipboard data files found.")
+        except FileNotFoundError:
+            if not silent_command_line:
+                print("ERROR: Clipboard data file not found.")
+        except json.JSONDecodeError:
+            if not silent_command_line:
+                print("ERROR: Failed to decode JSON from clipboard data file.")
+        except Exception as e:
+            if not silent_command_line:
+                print(f"ERROR: load_clipboard_data failed with exception: {e}")
+
     def search_clipboard(self):
         search_text = self.search_input.text().lower()
         for i in range(self.table.rowCount()):
-            item_text = self.table.item(i, 0).text().lower()
+            item_text = self.table.item(i, 1).text().lower()  # Now column 1 is Clipboard Text
             self.table.setRowHidden(i, search_text not in item_text)
         self.update_search_layout_color(bool(search_text))
 
