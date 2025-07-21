@@ -195,6 +195,8 @@ class MainWindow(QMainWindow):
         with open(new_filename, 'w') as file:
             file.write("ClipboardManager clipboard data version 0.2\n")
             json.dump(self.clipboard_data, file)
+            if not silent_command_line:
+                print("saved to '" + new_filename + "'");
 
     def load_clipboard_data(self):
         try:
@@ -216,6 +218,8 @@ class MainWindow(QMainWindow):
                     self.table.setRowCount(0)
                     for timestamp, text in self.clipboard_data:
                         self.add_item_to_datagrid(timestamp, text)
+                    if not silent_command_line:
+                        print("loaded from '" + latest_file + "'");
             else:
                 if not silent_command_line:
                     print("ERROR: No clipboard data files found.")
