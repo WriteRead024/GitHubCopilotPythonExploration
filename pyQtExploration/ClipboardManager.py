@@ -255,7 +255,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         msg_box = QMessageBox(self)
         msg_box.setWindowTitle("Confirm Exit")
-        msg_box.setText("Are you sure you want to exit?")
+        msg_box.setText("Are you sure you want to exit Clipboard Manager?")
         yes_button = QPushButton("Yes")
         no_button = QPushButton("No")
         msg_box.addButton(yes_button, QMessageBox.YesRole)
