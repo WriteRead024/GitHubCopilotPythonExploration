@@ -3,7 +3,8 @@
 # started Feb.12,2026
 # Google Gemini for Rich W.
 # with GitHub Copilot
-
+#
+# license MSL.l
 
 import nltk
 from nltk.corpus import stopwords
