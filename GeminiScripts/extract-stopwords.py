@@ -35,14 +35,16 @@ def export_stop_words():
             "spacy": sorted(list(spacy_en)),
             "in_common": sorted(list(set(nltk_en) & set(spacy_en))),
             "nltk_unique": sorted(list(nltk_en - spacy_en)),
-            "spacy_unique": sorted(list(spacy_en - nltk_en))
+            "spacy_unique": sorted(list(spacy_en - nltk_en)),
+            "distinct": sorted(list({*nltk_en, *spacy_en}))
         },
         "french": {
             "nltk": sorted(list(nltk_fr)),
             "spacy": sorted(list(spacy_fr)),
             "in_common": sorted(list(set(nltk_fr) & set(spacy_fr))),
             "nltk_unique": sorted(list(nltk_fr - spacy_fr)),
-            "spacy_unique": sorted(list(spacy_fr - nltk_fr))
+            "spacy_unique": sorted(list(spacy_fr - nltk_fr)),
+            "distinct": sorted(list({*nltk_fr, *spacy_fr}))
         }
     }
     json_filename = "stop_words_comparison.json"
