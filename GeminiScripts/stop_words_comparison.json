@@ -1,4 +1,6 @@
 {
+  "sourceFile": "extract-stopwords.py",
+  "timestamp": "2026-05-05T11:10:52.613326",
   "english": {
     "nltk": [
       "a",
