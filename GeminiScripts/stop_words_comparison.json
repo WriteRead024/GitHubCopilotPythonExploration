@@ -200,6 +200,7 @@
       "yourself",
       "yourselves"
     ],
+    "nltk_count": 198,
     "spacy": [
       "'d",
       "'ll",
@@ -528,6 +529,7 @@
       "’s",
       "’ve"
     ],
+    "spacy_count": 326,
     "in_common": [
       "a",
       "about",
@@ -653,6 +655,7 @@
       "yourself",
       "yourselves"
     ],
+    "in_common_count": 123,
     "nltk_unique": [
       "ain",
       "aren",
@@ -730,6 +733,7 @@
       "you're",
       "you've"
     ],
+    "nltk_unique_count": 75,
     "spacy_unique": [
       "'d",
       "'ll",
@@ -935,6 +939,7 @@
       "’s",
       "’ve"
     ],
+    "spacy_unique_count": 203,
     "distinct": [
       "'d",
       "'ll",
@@ -1337,7 +1342,8 @@
       "’re",
       "’s",
       "’ve"
-    ]
+    ],
+    "distinct_count": 401
   },
   "french": {
     "nltk": [
@@ -1499,6 +1505,7 @@
       "étés",
       "êtes"
     ],
+    "nltk_count": 157,
     "spacy": [
       "a",
       "abord",
@@ -2008,6 +2015,7 @@
       "être",
       "ô"
     ],
+    "spacy_count": 507,
     "in_common": [
       "ai",
       "aie",
@@ -2095,6 +2103,7 @@
       "était",
       "étant"
     ],
+    "in_common_count": 85,
     "nltk_unique": [
       "aient",
       "aies",
@@ -2169,6 +2178,7 @@
       "étés",
       "êtes"
     ],
+    "nltk_unique_count": 72,
     "spacy_unique": [
       "a",
       "abord",
@@ -2593,6 +2603,7 @@
       "être",
       "ô"
     ],
+    "spacy_unique_count": 422,
     "distinct": [
       "a",
       "abord",
@@ -3173,6 +3184,7 @@
       "êtes",
       "être",
       "ô"
-    ]
+    ],
+    "distinct_count": 579
   }
 }
