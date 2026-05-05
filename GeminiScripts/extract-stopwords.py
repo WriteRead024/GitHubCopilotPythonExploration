@@ -12,6 +12,7 @@ import spacy
 from spacy.lang.en import English
 from spacy.lang.fr import French
 import json
+from datetime import datetime
 
 
 def export_stop_words():
@@ -46,6 +47,8 @@ def export_stop_words():
 
     # Export to JSON file
     json_data = {
+        "sourceFile": 'extract-stopwords.py',
+        "timestamp": datetime.now().isoformat(),
         "english": {
             "nltk": en_nltk,
             "nltk_count": len(en_nltk),
