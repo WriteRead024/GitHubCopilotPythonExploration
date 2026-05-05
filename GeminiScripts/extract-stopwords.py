@@ -28,23 +28,51 @@ def export_stop_words():
     spacy_en = English().Defaults.stop_words
     spacy_fr = French().Defaults.stop_words
     
+    # Process English
+    en_nltk = sorted(list(nltk_en))
+    en_spacy = sorted(list(spacy_en))
+    en_in_common = sorted(list(set(nltk_en) & set(spacy_en)))
+    en_nltk_unique = sorted(list(nltk_en - spacy_en))
+    en_spacy_unique = sorted(list(spacy_en - nltk_en))
+    en_distinct = sorted(list({*nltk_en, *spacy_en}))
+
+    # Process French
+    fr_nltk = sorted(list(nltk_fr))
+    fr_spacy = sorted(list(spacy_fr))
+    fr_in_common = sorted(list(set(nltk_fr) & set(spacy_fr)))
+    fr_nltk_unique = sorted(list(nltk_fr - spacy_fr))
+    fr_spacy_unique = sorted(list(spacy_fr - nltk_fr))
+    fr_distinct = sorted(list({*nltk_fr, *spacy_fr}))
+
     # Export to JSON file
     json_data = {
         "english": {
-            "nltk": sorted(list(nltk_en)),
-            "spacy": sorted(list(spacy_en)),
-            "in_common": sorted(list(set(nltk_en) & set(spacy_en))),
-            "nltk_unique": sorted(list(nltk_en - spacy_en)),
-            "spacy_unique": sorted(list(spacy_en - nltk_en)),
-            "distinct": sorted(list({*nltk_en, *spacy_en}))
+            "nltk": en_nltk,
+            "nltk_count": len(en_nltk),
+            "spacy": en_spacy,
+            "spacy_count": len(en_spacy),
+            "in_common": en_in_common,
+            "in_common_count": len(en_in_common),
+            "nltk_unique": en_nltk_unique,
+            "nltk_unique_count": len(en_nltk_unique),
+            "spacy_unique": en_spacy_unique,
+            "spacy_unique_count": len(en_spacy_unique),
+            "distinct": en_distinct,
+            "distinct_count": len(en_distinct)
         },
         "french": {
-            "nltk": sorted(list(nltk_fr)),
-            "spacy": sorted(list(spacy_fr)),
-            "in_common": sorted(list(set(nltk_fr) & set(spacy_fr))),
-            "nltk_unique": sorted(list(nltk_fr - spacy_fr)),
-            "spacy_unique": sorted(list(spacy_fr - nltk_fr)),
-            "distinct": sorted(list({*nltk_fr, *spacy_fr}))
+            "nltk": fr_nltk,
+            "nltk_count": len(fr_nltk),
+            "spacy": fr_spacy,
+            "spacy_count": len(fr_spacy),
+            "in_common": fr_in_common,
+            "in_common_count": len(fr_in_common),
+            "nltk_unique": fr_nltk_unique,
+            "nltk_unique_count": len(fr_nltk_unique),
+            "spacy_unique": fr_spacy_unique,
+            "spacy_unique_count": len(fr_spacy_unique),
+            "distinct": fr_distinct,
+            "distinct_count": len(fr_distinct)
         }
     }
     json_filename = "stop_words_comparison.json"
